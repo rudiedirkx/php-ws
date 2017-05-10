@@ -22,17 +22,19 @@ class App implements MessageComponentInterface {
 		$this->users = new \SplObjectStorage;
 	}
 
-	public function onOpen(ConnectionInterface $conn) {
-		$this->users->attach($conn);
+	public function onOpen(ConnectionInterface $client) {
+		$this->users->attach($client);
 		echo "+1  " . count($this->users) . " online\n";
+
+		$client->send("[" . count($this->users) . " users online, including you]");
 	}
 
-	public function onClose(ConnectionInterface $conn) {
-		$this->users->detach($conn);
+	public function onClose(ConnectionInterface $client) {
+		$this->users->detach($client);
 		echo "-1 - " . count($this->users) . " online\n";
 	}
 
-	public function onError(ConnectionInterface $conn, \Exception $e) {
+	public function onError(ConnectionInterface $client, \Exception $e) {
 		echo __FUNCTION__ . "\n";
 	}
 
