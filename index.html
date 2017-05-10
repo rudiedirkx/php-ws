@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<title>PHP WebSocket</title>
+	<style>
+	* {
+		box-sizing: border-box;
+	}
+	html {
+		height: 100%;
+	}
+	body {
+		margin: 0;
+		padding: 20px;
+		min-height: 100%;
+		border: solid 20px black;
+	}
+	body.connecting {
+		border-color: blue;
+	}
+	body.connected {
+		border-color: green;
+	}
+	body.disconnected {
+		border-color: red;
+	}
+	</style>
+</head>
+
+<body onload="init()">
+
+<form>
+	<p>Send: <input required autofocus placeholder="Message..." /></p>
+	<p><button>Send message</button></p>
+</form>
+
+<h2>History</h2>
+
+<ul></ul>
+
+<script>
+function init() {
+	var form = document.querySelector('form');
+	var ul = document.querySelector('ul');
+
+	var conn = new WebSocket('ws://' + location.hostname + ':8086');
+	document.body.classList.add('connecting');
+	conn.onopen = function(e) {
+		console.debug('open', e);
+
+		document.body.classList.add('connected');
+	};
+	conn.onclose = function(e) {
+		console.debug('close', e);
+
+		document.body.classList.add('disconnected');
+	};
+	conn.onmessage = function(e) {
+		console.debug('message', e);
+
+		var li = document.createElement('li');
+		li.textContent = e.data;
+		ul.firstChild ? ul.insertBefore(li, ul.firstChild) : ul.appendChild(li);
+	};
+	conn.onerror = function(e) {
+		console.log('error', e);
+	};
+
+	form.onsubmit = function(e) {
+		e.preventDefault();
+		var input = this.elements[0];
+		var msg = input.value;
+		input.value = '';
+
+		conn.send(msg);
+	};
+}
+
+</script>
+
+</body>
+
+</html>
