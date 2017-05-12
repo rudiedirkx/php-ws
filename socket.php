@@ -17,6 +17,7 @@ if ( !$port ) {
 class App implements MessageComponentInterface {
 
 	protected $users;
+	protected $history = [];
 
 	public function __construct() {
 		$this->users = new \SplObjectStorage;
@@ -26,12 +27,14 @@ class App implements MessageComponentInterface {
 		$this->users->attach($client);
 		echo "+1  " . count($this->users) . " online\n";
 
-		$client->send("[" . count($this->users) . " users online, including you]");
+		$this->sendAll($this->mem() . "[" . count($this->users) . " users online, including you]");
 	}
 
 	public function onClose(ConnectionInterface $client) {
 		$this->users->detach($client);
 		echo "-1 - " . count($this->users) . " online\n";
+
+		$this->sendAll($this->mem() . "[" . count($this->users) . " users online, including you]");
 	}
 
 	public function onError(ConnectionInterface $client, \Exception $e) {
@@ -39,9 +42,19 @@ class App implements MessageComponentInterface {
 	}
 
 	public function onMessage(ConnectionInterface $from, $msg) {
+		$this->sendAll($this->mem() . $msg);
+	}
+
+	protected function sendAll($msg) {
+		$this->history[] = $msg;
+
 		foreach ( $this->users as $client ) {
 			$client->send($msg);
 		}
+	}
+
+	protected function mem() {
+		return '[' . number_format(memory_get_peak_usage() / 1e6, 2) . 'MB] ';
 	}
 
 }

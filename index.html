@@ -45,7 +45,8 @@ function init() {
 	var form = document.querySelector('form');
 	var ul = document.querySelector('ul');
 
-	var conn = new WebSocket('ws://' + location.hostname + ':8086');
+	var url = location.protocol == 'https:' ? 'wss://' + location.hostname + '/ws' : 'ws://' + location.hostname + ':8086';
+	var conn = new WebSocket(url);
 	document.body.classList.add('connecting');
 	conn.onopen = function(e) {
 		console.debug('open', e);
