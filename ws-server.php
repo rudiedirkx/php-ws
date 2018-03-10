@@ -62,5 +62,7 @@ class WsApp implements MessageComponentInterface {
 
 }
 
-$server = IoServer::factory(new HttpServer(new WsServer(new WsApp())), $port);
+$wsServer = new WsServer(new WsApp());
+$server = IoServer::factory(new HttpServer($wsServer), $port);
+$wsServer->enableKeepAlive($server->loop, 30);
 $server->run();

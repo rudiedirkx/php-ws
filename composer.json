@@ -2,7 +2,7 @@
     "name": "rdx/php-ws",
     "type": "project",
     "require": {
-        "cboden/ratchet": "^0.3.6"
+        "cboden/ratchet": "^0.4"
     },
     "license": "MIT",
     "authors": [
@@ -10,6 +10,5 @@
             "name": "Rudie Dirkx",
             "email": "github@hotblocks.nl"
         }
-    ],
-    "minimum-stability": "dev"
+    ]
 }
