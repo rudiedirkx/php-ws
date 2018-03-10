@@ -2,7 +2,8 @@
     "name": "rdx/php-ws",
     "type": "project",
     "require": {
-        "cboden/ratchet": "^0.4"
+        "cboden/ratchet": "^0.4",
+        "ratchet/pawl": "^0.3.1"
     },
     "license": "MIT",
     "authors": [
