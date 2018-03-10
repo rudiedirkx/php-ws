@@ -1,7 +1,10 @@
 <?php
 
+use Guzzle\Http\Message\RequestInterface;
+use Guzzle\Http\Message\Response;
 use Ratchet\ConnectionInterface;
 use Ratchet\Http\HttpServer;
+use Ratchet\Http\HttpServerInterface;
 use Ratchet\MessageComponentInterface;
 use Ratchet\Server\IoServer;
 use Ratchet\WebSocket\WsServer;
@@ -14,7 +17,7 @@ if ( !$port ) {
 	exit(1);
 }
 
-class App implements MessageComponentInterface {
+class WsApp implements MessageComponentInterface {
 
 	protected $users;
 	protected $history = [];
@@ -59,5 +62,5 @@ class App implements MessageComponentInterface {
 
 }
 
-$server = IoServer::factory(new HttpServer(new WsServer(new App())), $port);
+$server = IoServer::factory(new HttpServer(new WsServer(new WsApp())), $port);
 $server->run();
